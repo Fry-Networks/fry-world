@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { BN } from 'bn.js'
 import axios from 'axios'
 import { useToast } from '@chakra-ui/react'
 import { Heading, Text, FormControl, FormLabel, Input, Switch, Button, Stack, Divider } from '@chakra-ui/react'
@@ -22,7 +21,6 @@ const algodClient = new algosdk.Algodv2(
 const TokenInfos = () => {
 
   const { activeAddress, signTransactions, sendTransactions, getAssets, getAccountInfo } = useWallet()
-  const [accountFryAmount, setAccountFryAmount] = useState(0)
   const [pending, setPending] = useState(false)
   const [assetName, setAssetName] = useState('')
   const [unitName, setUnitName] = useState('')
@@ -108,7 +106,7 @@ const TokenInfos = () => {
       return
     }
 
-    if (assetName.length == 0 || unitName.length == 0 || totalSupply == 0)
+    if (assetName.length == 0 || unitName.length == 0 || totalSupply == undefined)
     {
       toast({
         title: 'Invalid Value',
@@ -160,7 +158,7 @@ const TokenInfos = () => {
       from: activeAddress,
       to: FRY_VAULT.toString(),
       amount: BigInt(fryAmount * 10**6),
-      note: 'fry.world payment',
+      note: new Uint8Array(Buffer.from('fry.world payment')),
       assetIndex: FRY_ASSETID,
       suggestedParams: params,
     });
@@ -174,7 +172,7 @@ const TokenInfos = () => {
 
     const transaction = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
       from: activeAddress,
-      note: 'fry.world payment',
+      note: new Uint8Array(Buffer.from('fry.world payment')),
       total: BigInt(totalSupply * 10**parseInt(tokenDecimal)),
       decimals: parseInt(tokenDecimal),
       defaultFrozen: defaultFrozen,
@@ -217,15 +215,6 @@ const TokenInfos = () => {
     setPending(false)
     console.log("Successfully sent transaction. Transaction ID: ", id);
   };
-
-  // const createToken = () => {
-
-  //   toast.promise(sendTransaction, {
-  //     success: { title: 'Success', description: 'Created Asset Successfully.' },
-  //     error: { title: 'Error', description: 'Failed Asset Creation.' },
-  //     loading: { title: 'Pending Transaction', description: 'Creating the Asset...' },
-  //   })
-  // }
 
   return (
     <div className='flex flex-col w-full px-72 py-16 gap-10 max-sm:px-12 max-sm:pt-24'>

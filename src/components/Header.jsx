@@ -60,6 +60,7 @@ const Header = () => {
         }
         return infos
       }
+      assets()
       setAddress(activeAccount.address.substring(0, 4) + '...' + activeAccount.address.slice(-4))
     } else {
       setAddress('')
