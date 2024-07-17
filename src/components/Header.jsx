@@ -1,0 +1,169 @@
+import { useEffect, useState } from "react";
+import { useWallet } from '@txnlab/use-wallet'
+import { Box, Image, Stack, HStack, Button, ModalHeader, useDisclosure, Modal, ModalBody, 
+  ModalContent, ModalCloseButton, ModalFooter, ModalOverlay, Text,
+  Grid, GridItem, Divider, 
+  Link} from '@chakra-ui/react'
+import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline";
+// import viteLogo from '/vite.svg'
+import viteLogo from '../assets/Logo.png'
+import fry from '../assets/fry.png'
+import algo from '../assets/algo.png'
+
+const Header = () => {
+
+  const Overlay = () => (
+    <ModalOverlay
+      bg='blackAlpha.300'
+      backdropFilter='blur(5px)'
+    />
+  )
+
+  const { providers, activeAccount, getAssets, getAccountInfo } = useWallet()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [overlay, setOverlay] = useState(<Overlay />)
+  const [address, setAddress] = useState('')
+  const [algoBalance, setAlgoBalance] = useState('0.00')
+  const [fryBalance, setFryBalance] = useState('0.00')
+
+  const handleDisconnect = () => {
+    if (activeAccount) {
+      providers?.map((provider) => {
+        if(provider.isActive) {
+          provider.disconnect()
+        }
+      })
+    }
+  }
+
+  useEffect( () => {
+    if (activeAccount) {
+      const assets = async () => {
+        const infos = await getAssets()
+        const accountInfo = await getAccountInfo()
+
+        if (!accountInfo.amount)
+          setAlgoBalance('0.00')
+        else {
+          setAlgoBalance((accountInfo.amount / 10**6).toFixed(3).toString())
+        }
+          
+
+        if (infos.length == 0) {
+          setFryBalance('0.00')
+        } else {
+          infos.map((info) => {
+            if (info["asset-id"] == 924268058) {
+              setFryBalance((info.amount / 10**6).toFixed(2).toString())
+            }
+          })
+        }
+        return infos
+      }
+      setAddress(activeAccount.address.substring(0, 4) + '...' + activeAccount.address.slice(-4))
+    } else {
+      setAddress('')
+    }
+  }, [activeAccount])
+
+  return(
+    <div className="flex justify-between w-full h-max px-16 border-b border-white/10 max-sm:px-0">
+      <div className="flex">
+        <Link href='https://frynetworks.com' target='_blank'>
+          <img src={viteLogo} className="logo" alt="Vite logo" />
+        </Link>
+      </div>
+      <div className="font-sans flex justify-between items-center lg:px-7 px-4 z-[50]">
+          <div className="flex items-center justify-between w-full gap-2">
+            <Stack spacing={4} direction='row' align='center' justify='center'>
+              {!activeAccount ? (
+                <Button color='#00C1F0' borderColor='#00C1F0' size='md' variant='outline' onClick={() => {
+                  setOverlay(<Overlay />)
+                  onOpen()
+                }}>Connect Wallet</Button>
+              ) : (
+                <>
+                  <Box color='#00C1F0' border='1px solid' borderColor='#00C1F0' borderRadius='0.3rem' size='sm' display='flex' py='0.2rem' px='0.5rem' gap='0.6rem' alignItems='center'>
+                    <Box gap='0.6rem' alignItems='center' display={{ base: 'none', sm: 'flex' }}>
+                      <Image borderRadius='full' boxSize='1.2rem' src={algo} alt="algo logo"/>
+                      <Text>{algoBalance}</Text>
+                    </Box>
+                    <Divider orientation='vertical' height='1.3rem' display={{ base: 'none', sm: 'flex' }}/>
+                    <Box display='flex' gap='0.6rem' alignItems='center'>
+                      <Image borderRadius='full' boxSize='1.2rem' src={fry} alt="fry logo"/>
+                      <Text>{fryBalance}</Text>
+                    </Box>
+                  </Box>
+                  <Button color='#00C1F0' borderColor='#00C1F0' size='md' variant='outline' onClick={() => {
+                    setOverlay(<Overlay />)
+                    onOpen()
+                  }}>{address}</Button>
+                </>
+              )}
+            </Stack>
+            <Modal isCentered isOpen={isOpen} onClose={onClose} returnFocusOnClose={false} blockScrollOnMount={false} closeOnOverlayClick={false} >
+              {overlay}
+              {!activeAccount ? (
+                <ModalContent p='0.5rem'>
+                  <ModalHeader>Connect to a wallet</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody>
+                    <Grid templateColumns='repeat(1, 5fr)' gap={6}>
+                      {providers?.map((provider) => (
+                        <GridItem w='100%' h='12' bg='#0d2139' border='1px solid #1F262F' borderRadius='0.3rem' key={'provider-' + provider.metadata.id}>
+                          <HStack >
+                            <Box as='button' display='flex' width='100%' alignItems='center' justifyContent='space-between' p='0.6rem' onClick={() => { provider.connect(); onClose() }} disabled={provider.isConnected}>
+                              <Box display='flex' alignItems='center' gap='0.6rem'>
+                                <Image borderRadius='full' boxSize='1.8rem' src={provider.metadata.icon} alt="Pera logo"/>
+                                <Text>{provider.metadata.name} Wallet</Text>
+                              </Box>
+                                {provider.isConnected ? (
+                                  <Box display='flex' gap='0.6rem' alignItems='center'>
+                                    <Text>Connected</Text>
+                                    <Box as='button'><ArrowRightStartOnRectangleIcon className="h-6 w-6 text-gray-500" /></Box>
+                                  </Box>
+                                ) : (
+                                  <Box display='flex' gap='0.6rem' alignItems='center'>
+                                    <Text>Disconnected</Text>
+                                    {/* <Box as='button'><ArrowRightStartOnRectangleIcon className="h-6 w-6 text-gray-500" /></Box> */}
+                                  </Box>
+                                )}
+                            </Box>
+                          </HStack>
+                        </GridItem>
+                      ))
+                      }
+                    </Grid>
+                  </ModalBody>
+                  <ModalFooter justifyContent='center'>
+                    <Text color='gray.400'>By connecting a wallet, you can proceed from here</Text>
+                  </ModalFooter>
+                </ModalContent>
+              ) : (
+                <ModalContent p='0.5rem'>
+                  <ModalHeader>Wallet Connection</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody>
+                    <HStack justifyContent='space-between'>
+                      <Box display='flex' gap='0.6rem' alignItems='center'>
+                        {providers?.map((provider) => (
+                            provider.isConnected && provider.isActive && (
+                              <Image borderRadius='full' boxSize='1.8rem' src={provider.metadata.icon} alt="Wallet logo"/>
+                            )
+                          ))
+                        }
+                        <Text>{address}</Text>
+                      </Box>
+                      <Button onClick={() => handleDisconnect()}>Disconnect</Button>
+                    </HStack>
+                  </ModalBody>
+                </ModalContent>
+              )}
+            </Modal>
+          </div>
+      </div>
+    </div>
+  )
+}
+
+export default Header;
