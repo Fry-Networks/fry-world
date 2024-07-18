@@ -3,7 +3,7 @@ import { Stack, Heading, Box, Link, Text, Divider } from '@chakra-ui/react'
 const Footer = () => {
   return (
     <Stack spacing='1rem' pb='4rem' align='center'>
-      <Heading as='h4' size='lg' pb='1rem'>Legal</Heading>
+      {/* <Heading as='h4' size='lg' pb='1rem'>Legal</Heading> */}
       <Stack flex direction={['column', 'row']} align='center'>
         <Box flex>
           <Link href='https://www.frynetworks.com/privacy-policy' target='_blank'>
