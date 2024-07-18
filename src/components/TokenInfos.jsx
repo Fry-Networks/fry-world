@@ -16,6 +16,7 @@ import algosdk from 'algosdk'
 
 import { FRY_ASSETID, FRY_VAULT, ALGO_VAULT} from './Constants'
 import query from '../assets/query.png'
+import TooltipWrapper from './TooltipWrapper'
 
 const algodClient = new algosdk.Algodv2(
   DEFAULT_NODE_TOKEN,
@@ -212,7 +213,7 @@ const TokenInfos = () => {
     if (id) {
       toast({
         title: 'Transaction Comfirmed Successfully!',
-        description: `Successfully sent transaction. Transaction ID: ${id}`,
+        description: `Successfully sent transaction. Transaction ID: ${id} The ${assetName} token created successfully. ${totalSupply} amounts is in your wallet.`,
         status: 'success',
         duration: 3000,
         isClosable: true,
@@ -245,18 +246,14 @@ const TokenInfos = () => {
               <FormLabel margin='unset'>
                 Asset Name
               </FormLabel>
-              <Tooltip label="The name of the asset. Max size is 32 bytes. Example: Tether" aria-label='A tooltip' placement='top'>
-                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
-              </Tooltip>
+              <TooltipWrapper label="The name of the asset. Max size is 32 bytes. Example: Tether" />
             </HStack>
             <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token asset name' value={assetName} onChange={handleAssetName} />
           </FormControl>
           <FormControl isRequired>
             <HStack align='center' pb='0.5rem'>
               <FormLabel margin='unset'>Unit Name</FormLabel>
-              <Tooltip label="The name of a unit of this asset. Max size is 8 bytes. Example: USDT" aria-label='A tooltip' placement='top'>
-                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
-              </Tooltip>
+              <TooltipWrapper label="The name of a unit of this asset. Max size is 8 bytes. Example: USDT" />
             </HStack>
             <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token unit name' value={unitName} onChange={handleUnitName} />
           </FormControl>
@@ -265,18 +262,14 @@ const TokenInfos = () => {
           <FormControl>
             <HStack align='center' pb='0.5rem'>
               <FormLabel margin='unset'>Manager Address</FormLabel>
-              <Tooltip label="The address of the account that can manage the configuration of the asset and destroy it." aria-label='A tooltip' placement='top'>
-                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
-              </Tooltip>
+              <TooltipWrapper label="The address of the account that can manage the configuration of the asset and destroy it." />
             </HStack>
             <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token manager address' value={managerAddr} onChange={handleManagerAddr} />
           </FormControl>
           <FormControl>
             <HStack align='center' pb='0.5rem'>
               <FormLabel margin='unset'>Reserve Address</FormLabel>
-              <Tooltip label="The address of the account that holds the reserve (non-minted) units of the asset. This address has no specific authority in the protocol itself." aria-label='A tooltip' placement='top'>
-                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
-              </Tooltip>
+              <TooltipWrapper label="The address of the account that holds the reserve (non-minted) units of the asset. This address has no specific authority in the protocol itself." />
             </HStack>
             <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token reserve address' value={reserveAddr} onChange={handleReserveAddr} />
           </FormControl>
@@ -285,18 +278,14 @@ const TokenInfos = () => {
           <FormControl>
             <HStack align='center' pb='0.5rem'>
               <FormLabel margin='unset'>Freeze Address</FormLabel>
-              <Tooltip label="The address of the account used to freeze holdings of this asset. If empty, freezing is not permitted." aria-label='A tooltip' placement='top'>
-                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
-              </Tooltip>
+              <TooltipWrapper label="The address of the account used to freeze holdings of this asset. If empty, freezing is not permitted." />
             </HStack>
             <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token freeze address' value={freezeAddr} onChange={handleFreezeAddr} />
           </FormControl>
           <FormControl>
             <HStack align='center' pb='0.5rem'>
               <FormLabel margin='unset'>ClawBack Address</FormLabel>
-              <Tooltip label="The address of the account that can clawback holdings of this asset. If empty, clawback is not permitted." aria-label='A tooltip' placement='top'>
-                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
-              </Tooltip>
+              <TooltipWrapper label="The address of the account that can clawback holdings of this asset. If empty, clawback is not permitted." />
             </HStack>
             <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token clawback address' value={clawBackAddr} onChange={handleClawBackAddr} />
           </FormControl>
@@ -305,18 +294,14 @@ const TokenInfos = () => {
           <FormControl isRequired>
             <HStack align='center' pb='0.5rem'>
               <FormLabel margin='unset'>Total Supply</FormLabel>
-              <Tooltip label="The total number of base units of the asset to create. This number cannot be changed." aria-label='A tooltip' placement='top'>
-                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
-              </Tooltip>
+              <TooltipWrapper label="The total number of base units of the asset to create. This number cannot be changed." />
             </HStack>
             <Input type='number' backgroundColor='#0B1D33' placeholder='Enter your token total supply' value={totalSupply} onChange={handleTotalSupply} />
           </FormControl>
           <FormControl isRequired>
             <HStack align='center' pb='0.5rem'>
               <FormLabel margin='unset'>Token Decimal</FormLabel>
-              <Tooltip label="The number of digits to use after the decimal point when displaying the asset. If 3, the base unit of the asset is in thousandths, and so on up to 19 decimal places" aria-label='A tooltip' placement='top'>
-                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
-              </Tooltip>
+              <TooltipWrapper label="The number of digits to use after the decimal point when displaying the asset. If 3, the base unit of the asset is in thousandths, and so on up to 19 decimal places" />
             </HStack>
             <Input type='number' backgroundColor='#0B1D33' placeholder='Enter your token decimal' value={tokenDecimal} onChange={handleTokenDecimal} />
           </FormControl>
@@ -325,18 +310,14 @@ const TokenInfos = () => {
           <FormControl>
             <HStack align='center' pb='0.5rem'>
               <FormLabel margin='unset'>Asset URL</FormLabel>
-              <Tooltip label="Specifies a URL where more information about the asset can be retrieved. Max size is 96 bytes." aria-label='A tooltip' placement='top'>
-                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
-              </Tooltip>
+              <TooltipWrapper label="Specifies a URL where more information about the asset can be retrieved. Max size is 96 bytes." />
             </HStack>
             <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token asset url' value={assetUrl} onChange={handleAssetUrl} />
           </FormControl>
           <FormControl>
             <HStack align='center' pb='0.5rem'>
               <FormLabel margin='unset'>Default Frozen</FormLabel>
-              <Tooltip label="True to freeze holdings for this asset by default." aria-label='A tooltip' placement='top'>
-                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
-              </Tooltip>
+              <TooltipWrapper label="True to freeze holdings for this asset by default." />
             </HStack>
             <Switch id='isChecked' size='lg' onChange={handleDefaultFrozen}/>
           </FormControl>

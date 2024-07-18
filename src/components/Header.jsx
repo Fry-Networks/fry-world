@@ -84,12 +84,12 @@ const Header = () => {
                 }}>Connect Wallet</Button>
               ) : (
                 <>
-                  <Box color='#00C1F0' border='1px solid' borderColor='#00C1F0' borderRadius='0.3rem' size='sm' display='flex' py='0.2rem' px='0.5rem' gap='0.6rem' alignItems='center'>
-                    <Box gap='0.6rem' alignItems='center' display={{ base: 'none', sm: 'flex' }}>
+                  <Box color='#00C1F0' border='1px solid' borderColor='#00C1F0' borderRadius='0.3rem' size='sm' py='0.2rem' px='0.5rem' gap='0.6rem' alignItems='center' display={{ base: 'none', sm: 'flex' }}>
+                    <Box display='flex' gap='0.6rem' alignItems='center'>
                       <Image borderRadius='full' boxSize='1.2rem' src={algo} alt="algo logo"/>
                       <Text>{algoBalance}</Text>
                     </Box>
-                    <Divider orientation='vertical' height='1.3rem' display={{ base: 'none', sm: 'flex' }}/>
+                    <Divider orientation='vertical' height='1.3rem' display='flex'/>
                     <Box display='flex' gap='0.6rem' alignItems='center'>
                       <Image borderRadius='full' boxSize='1.2rem' src={fry} alt="fry logo"/>
                       <Text>{fryBalance}</Text>
