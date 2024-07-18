@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useToast } from '@chakra-ui/react'
-import { Heading, Text, FormControl, FormLabel, Input, Switch, Button, Stack, Divider } from '@chakra-ui/react'
+import { 
+  Heading, Text, FormControl, 
+  FormLabel, Input, Switch, 
+  Button, Stack, Divider, 
+  Tooltip, Image, HStack } from '@chakra-ui/react'
 import { 
   useWallet,
   DEFAULT_NODE_BASEURL,
@@ -11,6 +15,7 @@ import {
 import algosdk from 'algosdk'
 
 import { FRY_ASSETID, FRY_VAULT, ALGO_VAULT} from './Constants'
+import query from '../assets/query.png'
 
 const algodClient = new algosdk.Algodv2(
   DEFAULT_NODE_TOKEN,
@@ -21,6 +26,7 @@ const algodClient = new algosdk.Algodv2(
 const TokenInfos = () => {
 
   const { activeAddress, signTransactions, sendTransactions, getAssets, getAccountInfo } = useWallet()
+  const [accountFryAmount, setAccountFryAmount] = useState(0)
   const [pending, setPending] = useState(false)
   const [assetName, setAssetName] = useState('')
   const [unitName, setUnitName] = useState('')
@@ -216,6 +222,15 @@ const TokenInfos = () => {
     console.log("Successfully sent transaction. Transaction ID: ", id);
   };
 
+  // const createToken = () => {
+
+  //   toast.promise(sendTransaction, {
+  //     success: { title: 'Success', description: 'Created Asset Successfully.' },
+  //     error: { title: 'Error', description: 'Failed Asset Creation.' },
+  //     loading: { title: 'Pending Transaction', description: 'Creating the Asset...' },
+  //   })
+  // }
+
   return (
     <div className='flex flex-col w-full px-72 py-16 gap-10 max-sm:px-12 max-sm:pt-24'>
       <Divider />
@@ -226,51 +241,103 @@ const TokenInfos = () => {
       <div className='flex flex-col gap-8 max-sm:gap-16'>
         <div className='flex gap-16 max-sm:flex-col'>
           <FormControl isRequired>
-            <FormLabel>Asset Name</FormLabel>
+            <HStack align='center' pb='0.5rem'>
+              <FormLabel margin='unset'>
+                Asset Name
+              </FormLabel>
+              <Tooltip label="The name of the asset. Max size is 32 bytes. Example: Tether" aria-label='A tooltip' placement='top'>
+                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
+              </Tooltip>
+            </HStack>
             <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token asset name' value={assetName} onChange={handleAssetName} />
           </FormControl>
           <FormControl isRequired>
-            <FormLabel>Unit Name</FormLabel>
+            <HStack align='center' pb='0.5rem'>
+              <FormLabel margin='unset'>Unit Name</FormLabel>
+              <Tooltip label="The name of a unit of this asset. Max size is 8 bytes. Example: USDT" aria-label='A tooltip' placement='top'>
+                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
+              </Tooltip>
+            </HStack>
             <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token unit name' value={unitName} onChange={handleUnitName} />
           </FormControl>
         </div>
         <div className='flex gap-16 max-sm:flex-col'>
           <FormControl>
-            <FormLabel>Manager Address</FormLabel>
+            <HStack align='center' pb='0.5rem'>
+              <FormLabel margin='unset'>Manager Address</FormLabel>
+              <Tooltip label="The address of the account that can manage the configuration of the asset and destroy it." aria-label='A tooltip' placement='top'>
+                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
+              </Tooltip>
+            </HStack>
             <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token manager address' value={managerAddr} onChange={handleManagerAddr} />
           </FormControl>
           <FormControl>
-            <FormLabel>Reserve Address</FormLabel>
+            <HStack align='center' pb='0.5rem'>
+              <FormLabel margin='unset'>Reserve Address</FormLabel>
+              <Tooltip label="The address of the account that holds the reserve (non-minted) units of the asset. This address has no specific authority in the protocol itself." aria-label='A tooltip' placement='top'>
+                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
+              </Tooltip>
+            </HStack>
             <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token reserve address' value={reserveAddr} onChange={handleReserveAddr} />
           </FormControl>
         </div>
         <div className='flex gap-16 max-sm:flex-col'>
           <FormControl>
-            <FormLabel>Freeze Address</FormLabel>
+            <HStack align='center' pb='0.5rem'>
+              <FormLabel margin='unset'>Freeze Address</FormLabel>
+              <Tooltip label="The address of the account used to freeze holdings of this asset. If empty, freezing is not permitted." aria-label='A tooltip' placement='top'>
+                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
+              </Tooltip>
+            </HStack>
             <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token freeze address' value={freezeAddr} onChange={handleFreezeAddr} />
           </FormControl>
           <FormControl>
-            <FormLabel>ClawBack Address</FormLabel>
+            <HStack align='center' pb='0.5rem'>
+              <FormLabel margin='unset'>ClawBack Address</FormLabel>
+              <Tooltip label="The address of the account that can clawback holdings of this asset. If empty, clawback is not permitted." aria-label='A tooltip' placement='top'>
+                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
+              </Tooltip>
+            </HStack>
             <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token clawback address' value={clawBackAddr} onChange={handleClawBackAddr} />
           </FormControl>
         </div>
         <div className='flex gap-16 max-sm:flex-col'>
           <FormControl isRequired>
-            <FormLabel>Total Supply</FormLabel>
+            <HStack align='center' pb='0.5rem'>
+              <FormLabel margin='unset'>Total Supply</FormLabel>
+              <Tooltip label="The total number of base units of the asset to create. This number cannot be changed." aria-label='A tooltip' placement='top'>
+                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
+              </Tooltip>
+            </HStack>
             <Input type='number' backgroundColor='#0B1D33' placeholder='Enter your token total supply' value={totalSupply} onChange={handleTotalSupply} />
           </FormControl>
           <FormControl isRequired>
-            <FormLabel>Token Decimal</FormLabel>
+            <HStack align='center' pb='0.5rem'>
+              <FormLabel margin='unset'>Token Decimal</FormLabel>
+              <Tooltip label="The number of digits to use after the decimal point when displaying the asset. If 3, the base unit of the asset is in thousandths, and so on up to 19 decimal places" aria-label='A tooltip' placement='top'>
+                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
+              </Tooltip>
+            </HStack>
             <Input type='number' backgroundColor='#0B1D33' placeholder='Enter your token decimal' value={tokenDecimal} onChange={handleTokenDecimal} />
           </FormControl>
         </div>
         <div className='flex gap-16 max-sm:flex-col'>
           <FormControl>
-            <FormLabel>Asset URL</FormLabel>
+            <HStack align='center' pb='0.5rem'>
+              <FormLabel margin='unset'>Asset URL</FormLabel>
+              <Tooltip label="Specifies a URL where more information about the asset can be retrieved. Max size is 96 bytes." aria-label='A tooltip' placement='top'>
+                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
+              </Tooltip>
+            </HStack>
             <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token asset url' value={assetUrl} onChange={handleAssetUrl} />
           </FormControl>
           <FormControl>
-            <FormLabel>Default Frozen</FormLabel>
+            <HStack align='center' pb='0.5rem'>
+              <FormLabel margin='unset'>Default Frozen</FormLabel>
+              <Tooltip label="True to freeze holdings for this asset by default." aria-label='A tooltip' placement='top'>
+                <Image borderRadius='full' boxSize='1.2rem' src={query} alt="question mark"/>
+              </Tooltip>
+            </HStack>
             <Switch id='isChecked' size='lg' onChange={handleDefaultFrozen}/>
           </FormControl>
         </div>
