@@ -27,8 +27,8 @@ const algodClient = new algosdk.Algodv2(
 const TokenInfos = () => {
 
   const { activeAddress, signTransactions, sendTransactions, getAssets, getAccountInfo } = useWallet()
-  const [feeAmount, setFeeAmount] = useState(null);
-  const [prevFeeAmount, setPrevFeeAmount] = useState(null);
+  // const [feeAmount, setFeeAmount] = useState(null);
+  // const [prevFeeAmount, setPrevFeeAmount] = useState(null);
   const [pending, setPending] = useState(false)
   const [assetName, setAssetName] = useState('')
   const [unitName, setUnitName] = useState('')
@@ -94,24 +94,30 @@ const TokenInfos = () => {
     }
   }
   
-  useEffect(() => {
+  const getFRYAmount = async () => {
+    const USDPrice = await getFRYPrice()
+    const amount = parseInt(20 / USDPrice)
+    return amount
+  }
+
+  // useEffect(() => {
     
-    const getFRYAmount = async () => {
-      const USDPrice = await getFRYPrice()
-      const newAmount = parseInt(20 / USDPrice)
+  //   const getFRYAmount = async () => {
+  //     const USDPrice = await getFRYPrice()
+  //     const newAmount = parseInt(20 / USDPrice)
 
-      if (newAmount !== prevFeeAmount) {
-        setFeeAmount(newAmount)
-        setPrevFeeAmount(newAmount)
-      }
-    }
+  //     if (newAmount !== prevFeeAmount) {
+  //       setFeeAmount(newAmount)
+  //       setPrevFeeAmount(newAmount)
+  //     }
+  //   }
 
-    getFRYAmount()
+  //   getFRYAmount()
 
-    const interval = setInterval(getFRYAmount, 60000)
+  //   const interval = setInterval(getFRYAmount, 60000)
 
-    return () => clearInterval(interval)
-  }, [prevFeeAmount])
+  //   return () => clearInterval(interval)
+  // }, [prevFeeAmount])
 
   const sendTransaction = async (
   ) => {
@@ -143,10 +149,10 @@ const TokenInfos = () => {
 
     const assetInfos = await getAssets()
     const accountInfo = await getAccountInfo()
-    // const fryAmount = await getFRYAmount()
+    const fryAmount = await getFRYAmount()
 
     const filteredInfos = assetInfos.filter((info) => {
-      return info['asset-id'] == FRY_ASSETID && parseInt(info.amount / 10**6) < feeAmount;
+      return info['asset-id'] == FRY_ASSETID && parseInt(info.amount / 10**6) < fryAmount;
     });
 
     if (filteredInfos.length) {
@@ -178,7 +184,7 @@ const TokenInfos = () => {
     const Txn1 = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: activeAddress,
       to: FRY_VAULT.toString(),
-      amount: BigInt(feeAmount * 10**6),
+      amount: BigInt(fryAmount * 10**6),
       note: new Uint8Array(Buffer.from('fry.world payment')),
       assetIndex: FRY_ASSETID,
       suggestedParams: params,
@@ -338,7 +344,7 @@ const TokenInfos = () => {
         </div>
       </div>
       <Stack spacing={4} direction='column' align='center' justify='center' py='3rem'>
-        <Text fontSize='sm'>( Cost: {feeAmount} $FRY )</Text>
+        <Text fontSize='sm'>(Cost: $20 USD in $FRY)</Text>
         <Button backgroundColor='#00C1F0' disabled={pending} onClick={() => sendTransaction()}>Create Token</Button>
       </Stack>
       <Divider />
