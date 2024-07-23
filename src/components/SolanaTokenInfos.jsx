@@ -4,8 +4,10 @@ import { useToast } from '@chakra-ui/react'
 import { 
   Heading, Text, FormControl, 
   FormLabel, Input, Switch, 
-  Button, Stack, Divider, 
-  Tooltip, Image, HStack } from '@chakra-ui/react'
+  Button, Stack, Divider, HStack,
+  Textarea } from '@chakra-ui/react'
+import TooltipWrapper from './TooltipWrapper'
+
 import { 
   useWallet,
   DEFAULT_NODE_BASEURL,
@@ -13,10 +15,9 @@ import {
   DEFAULT_NODE_PORT,
  } from '@txnlab/use-wallet'
 import algosdk from 'algosdk'
-
 import { FRY_ASSETID, FRY_VAULT, ALGO_VAULT} from './Constants'
-import query from '../assets/query.png'
-import TooltipWrapper from './TooltipWrapper'
+
+// import { useWallet } from "@solana/wallet-adapter-react";
 
 const algodClient = new algosdk.Algodv2(
   DEFAULT_NODE_TOKEN,
@@ -24,45 +25,31 @@ const algodClient = new algosdk.Algodv2(
   DEFAULT_NODE_PORT
 )
 
-const TokenInfos = () => {
+const SolanaTokenInfos = () => {
 
   const { activeAddress, signTransactions, sendTransactions, getAssets, getAccountInfo } = useWallet()
   const [accountFryAmount, setAccountFryAmount] = useState(0)
   const [pending, setPending] = useState(false)
-  const [assetName, setAssetName] = useState('')
-  const [unitName, setUnitName] = useState('')
-  const [managerAddr, setManagerAddr] = useState('')
-  const [reserveAddr, setReserveAddr] = useState('')
-  const [freezeAddr, setFreezeAddr] = useState('')
-  const [clawBackAddr, setClawBackAddr] = useState('')
+  const [tokenName, setTokenName] = useState('')
+  const [symbol, setSymbol] = useState('')
   const [totalSupply, setTotalSupply] = useState()
   const [tokenDecimal, setTokenDecimal] = useState(0)
-  const [assetUrl, setAssetUrl] = useState('')
-  const [defaultFrozen, setDefaultFrozen] = useState(false)
+  const [websiteUrl, setWebsiteUrl] = useState('')
+  const [twitterUrl, setTwitterUrl] = useState('')
+  const [telegramUrl, settelegramUrl] = useState('')
+  const [discordUrl, setDiscordUrl] = useState('')
+  const [description, setDescription] = useState('')
+  const [mintAuthority, setMintAuthority] = useState(false)
+  const [updateAuthority, setUpdateAuthority] = useState(false)
+  const [freezeAuthority, setFreezeAuthority] = useState(false)
   const toast = useToast()
 
-  const handleAssetName = (e) => {
-    setAssetName(e.target.value)
+  const handleTokenName = (e) => {
+    setTokenName(e.target.value)
   }
 
-  const handleUnitName = (e) => {
-    setUnitName(e.target.value)
-  }
-
-  const handleManagerAddr = (e) => {
-    setManagerAddr(e.target.value)
-  }
-
-  const handleReserveAddr = (e) => {
-    setReserveAddr(e.target.value)
-  }
-
-  const handleFreezeAddr = (e) => {
-    setFreezeAddr(e.target.value)
-  }
-
-  const handleClawBackAddr = (e) => {
-    setClawBackAddr(e.target.value)
+  const handleSymbol = (e) => {
+    setSymbol(e.target.value)
   }
 
   const handleTotalSupply = (e) => {
@@ -73,12 +60,36 @@ const TokenInfos = () => {
     setTokenDecimal(e.target.value)
   }
 
-  const handleAssetUrl = (e) => {
-    setAssetUrl(e.target.value)
+  const handleWebsiteUrl = (e) => {
+    setWebsiteUrl(e.target.value)
   }
 
-  const handleDefaultFrozen = (e) => {
-    setDefaultFrozen(e.target.checked)
+  const handleTwitterUrl = (e) => {
+    setTwitterUrl(e.target.value)
+  }
+
+  const handleTelegramUrl = (e) => {
+    setTelegramUrl(e.target.value)
+  }
+
+  const handleDiscordUrl = (e) => {
+    setDiscordUrl(e.target.value)
+  }
+
+  const handleDescription = (e) => {
+    setDescription(e.target.value)
+  }
+
+  const handleMintAuthority = (e) => {
+    setMintAuthority(e.target.checked)
+  }
+
+  const handleUpdateAuthority = (e) => {
+    setUpdateAuthority(e.target.checked)
+  }
+
+  const handleFreezeAuthority = (e) => {
+    setFreezeAuthority(e.target.checked)
   }
 
   const getFRYPrice = async () => {
@@ -113,7 +124,7 @@ const TokenInfos = () => {
       return
     }
 
-    if (assetName.length == 0 || unitName.length == 0 || totalSupply == undefined)
+    if (tokenName.length == 0 || symbol.length == 0 || totalSupply == undefined)
     {
       toast({
         title: 'Invalid Value',
@@ -170,13 +181,6 @@ const TokenInfos = () => {
       suggestedParams: params,
     });
 
-    // const Txn2 = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
-    //   from: activeAddress,
-    //   to: ALGO_VAULT.toString(),
-    //   amount: 1000000,
-    //   suggestedParams: params,
-    // })
-
     const transaction = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
       from: activeAddress,
       note: new Uint8Array(Buffer.from('fry.world payment')),
@@ -223,15 +227,6 @@ const TokenInfos = () => {
     console.log("Successfully sent transaction. Transaction ID: ", id);
   };
 
-  // const createToken = () => {
-
-  //   toast.promise(sendTransaction, {
-  //     success: { title: 'Success', description: 'Created Asset Successfully.' },
-  //     error: { title: 'Error', description: 'Failed Asset Creation.' },
-  //     loading: { title: 'Pending Transaction', description: 'Creating the Asset...' },
-  //   })
-  // }
-
   return (
     <div className='flex flex-col w-full px-72 py-16 gap-10 max-sm:px-12 max-sm:pt-24'>
       <Divider />
@@ -244,82 +239,98 @@ const TokenInfos = () => {
           <FormControl isRequired>
             <HStack align='center' pb='0.5rem'>
               <FormLabel margin='unset'>
-                Asset Name
+                Token Name
               </FormLabel>
               <TooltipWrapper label="The name of the asset. Max size is 32 bytes. Example: Tether" />
             </HStack>
-            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token asset name' value={assetName} onChange={handleAssetName} />
+            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token name' value={tokenName} onChange={handleTokenName} />
           </FormControl>
           <FormControl isRequired>
             <HStack align='center' pb='0.5rem'>
-              <FormLabel margin='unset'>Unit Name</FormLabel>
+              <FormLabel margin='unset'>Symbol</FormLabel>
               <TooltipWrapper label="The name of a unit of this asset. Max size is 8 bytes. Example: USDT" />
             </HStack>
-            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token unit name' value={unitName} onChange={handleUnitName} />
+            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token symbol' value={symbol} onChange={handleSymbol} />
           </FormControl>
         </div>
         <div className='flex gap-16 max-sm:flex-col'>
           <FormControl>
             <HStack align='center' pb='0.5rem'>
-              <FormLabel margin='unset'>Manager Address</FormLabel>
+              <FormLabel margin='unset'>Decimals</FormLabel>
               <TooltipWrapper label="The address of the account that can manage the configuration of the asset and destroy it." />
             </HStack>
-            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token manager address' value={managerAddr} onChange={handleManagerAddr} />
+            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token manager address' value={tokenDecimal} onChange={handleTokenDecimal} />
           </FormControl>
           <FormControl>
-            <HStack align='center' pb='0.5rem'>
-              <FormLabel margin='unset'>Reserve Address</FormLabel>
-              <TooltipWrapper label="The address of the account that holds the reserve (non-minted) units of the asset. This address has no specific authority in the protocol itself." />
-            </HStack>
-            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token reserve address' value={reserveAddr} onChange={handleReserveAddr} />
-          </FormControl>
-        </div>
-        <div className='flex gap-16 max-sm:flex-col'>
-          <FormControl>
-            <HStack align='center' pb='0.5rem'>
-              <FormLabel margin='unset'>Freeze Address</FormLabel>
-              <TooltipWrapper label="The address of the account used to freeze holdings of this asset. If empty, freezing is not permitted." />
-            </HStack>
-            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token freeze address' value={freezeAddr} onChange={handleFreezeAddr} />
-          </FormControl>
-          <FormControl>
-            <HStack align='center' pb='0.5rem'>
-              <FormLabel margin='unset'>ClawBack Address</FormLabel>
-              <TooltipWrapper label="The address of the account that can clawback holdings of this asset. If empty, clawback is not permitted." />
-            </HStack>
-            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token clawback address' value={clawBackAddr} onChange={handleClawBackAddr} />
-          </FormControl>
-        </div>
-        <div className='flex gap-16 max-sm:flex-col'>
-          <FormControl isRequired>
             <HStack align='center' pb='0.5rem'>
               <FormLabel margin='unset'>Total Supply</FormLabel>
               <TooltipWrapper label="The total number of base units of the asset to create. This number cannot be changed." />
             </HStack>
             <Input type='number' backgroundColor='#0B1D33' placeholder='Enter your token total supply' value={totalSupply} onChange={handleTotalSupply} />
           </FormControl>
-          <FormControl isRequired>
+        </div>
+        <div className='flex gap-16 max-sm:flex-col'>
+          <FormControl>
             <HStack align='center' pb='0.5rem'>
-              <FormLabel margin='unset'>Token Decimal</FormLabel>
-              <TooltipWrapper label="The number of digits to use after the decimal point when displaying the asset. If 3, the base unit of the asset is in thousandths, and so on up to 19 decimal places" />
+              <FormLabel margin='unset'>Website URL</FormLabel>
+              <TooltipWrapper label="" />
             </HStack>
-            <Input type='number' backgroundColor='#0B1D33' placeholder='Enter your token decimal' value={tokenDecimal} onChange={handleTokenDecimal} />
+            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token website URL' value={websiteUrl} onChange={handleWebsiteUrl} />
+          </FormControl>
+          <FormControl>
+            <HStack align='center' pb='0.5rem'>
+              <FormLabel margin='unset'>Twitter URL</FormLabel>
+              <TooltipWrapper label="" />
+            </HStack>
+            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token Twitter URL' value={twitterUrl} onChange={handleTwitterUrl} />
           </FormControl>
         </div>
         <div className='flex gap-16 max-sm:flex-col'>
           <FormControl>
             <HStack align='center' pb='0.5rem'>
-              <FormLabel margin='unset'>Asset URL</FormLabel>
-              <TooltipWrapper label="Specifies a URL where more information about the asset can be retrieved. Max size is 96 bytes." />
+              <FormLabel margin='unset'>Telegram Group URL</FormLabel>
+              <TooltipWrapper label="" />
             </HStack>
-            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token asset url' value={assetUrl} onChange={handleAssetUrl} />
+            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token telegram group URL' value={telegramUrl} onChange={handleTelegramUrl} />
           </FormControl>
           <FormControl>
             <HStack align='center' pb='0.5rem'>
-              <FormLabel margin='unset'>Default Frozen</FormLabel>
+              <FormLabel margin='unset'>Discord URL</FormLabel>
+              <TooltipWrapper label="" />
+            </HStack>
+            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token discord URL' value={discordUrl} onChange={handleDiscordUrl} />
+          </FormControl>
+        </div>
+        <div className='flex gap-16 max-sm:flex-col'>
+          <FormControl>
+            <HStack align='center' pb='0.5rem'>
+              <FormLabel margin='unset'>Description</FormLabel>
+              <TooltipWrapper label="" />
+            </HStack>
+            <Textarea type='text' backgroundColor='#0B1D33' placeholder='Enter your token description' value={description} onChange={handleDescription} />
+          </FormControl>
+          <FormControl>
+            <HStack align='center' pb='0.5rem'>
+              <FormLabel margin='unset'>Mint Authority</FormLabel>
+              <TooltipWrapper label="True to mint this asset by default." />
+            </HStack>
+            <Switch id='isChecked' size='lg' onChange={handleMintAuthority}/>
+          </FormControl>
+        </div>
+        <div className='flex gap-16 max-sm:flex-col'>
+          <FormControl>
+            <HStack align='center' pb='0.5rem'>
+              <FormLabel margin='unset'>Update Authority</FormLabel>
+              <TooltipWrapper label="True to update this asset by default." />
+            </HStack>
+            <Switch id='isChecked' size='lg' onChange={handleUpdateAuthority}/>
+          </FormControl>
+          <FormControl>
+            <HStack align='center' pb='0.5rem'>
+              <FormLabel margin='unset'>Freeze Authority</FormLabel>
               <TooltipWrapper label="True to freeze holdings for this asset by default." />
             </HStack>
-            <Switch id='isChecked' size='lg' onChange={handleDefaultFrozen}/>
+            <Switch id='isChecked' size='lg' onChange={handleFreezeAuthority}/>
           </FormControl>
         </div>
       </div>
@@ -331,4 +342,4 @@ const TokenInfos = () => {
   )
 }
 
-export default TokenInfos;
+export default SolanaTokenInfos;

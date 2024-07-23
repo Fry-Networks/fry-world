@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
+import { Link } from 'react-router-dom'
 import { useWallet } from '@txnlab/use-wallet'
 import { Box, Image, Stack, HStack, Button, ModalHeader, useDisclosure, Modal, ModalBody, 
-  ModalContent, ModalCloseButton, ModalFooter, ModalOverlay, Text,
-  Grid, GridItem, Divider, 
-  Link} from '@chakra-ui/react'
-import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline";
-// import viteLogo from '/vite.svg'
+  ModalContent, ModalCloseButton, ModalFooter, ModalOverlay, Text, IconButton,
+  Grid, GridItem, Divider, Menu, MenuButton, MenuList, MenuItem, MenuDivider,
+} from '@chakra-ui/react'
+import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline"
+
 import viteLogo from '../assets/Logo.png'
 import fry from '../assets/fry.png'
 import algo from '../assets/algo.png'
+import eth from '../assets/ethereum.png'
+import sol from '../assets/solana.png'
 
 const Header = () => {
 
@@ -25,6 +28,12 @@ const Header = () => {
   const [address, setAddress] = useState('')
   const [algoBalance, setAlgoBalance] = useState('0.00')
   const [fryBalance, setFryBalance] = useState('0.00')
+  const [chainStatus, setChainStatus] = useState(0)
+  const chainList = [
+    { chainId: 0, chainName: 'ALGORAND', chainIcon: `${algo}` },
+    { chainId: 1, chainName: 'SOLANA', chainIcon: `${sol}` },
+    { chainId: 2, chainName: 'ETHEREUM', chainIcon: `${eth}`},
+  ]
 
   const handleDisconnect = () => {
     if (activeAccount) {
@@ -70,11 +79,76 @@ const Header = () => {
   return(
     <div className="flex justify-between w-full h-max px-16 border-b border-white/10 max-sm:px-0">
       <div className="flex">
-        <Link href='https://frynetworks.com' target='_blank'>
+        <Link to='https://frynetworks.com' target='_blank'>
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </Link>
       </div>
-      <div className="font-sans flex justify-between items-center lg:px-7 px-4 z-[50]">
+      <div className="font-sans flex justify-between items-center lg:px-7 px-4 z-[50] gap-6">
+          <div className="flex">
+            <nav>
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  color='#00C1F0'
+                  borderColor='#00C1F0'
+                  pr={{ base: '0.5rem', sm: '2.4rem' }}
+                  variant='outline'
+                  leftIcon ={
+                    <Image
+                      boxSize='1.5rem'
+                      borderRadius='full'
+                      src={chainList[chainStatus].chainIcon}
+                      alt='Chain Icon'
+                    />
+                  }
+                >
+                  <Box display={{ base: 'none', sm: 'flex' }}>
+                    {chainList[chainStatus].chainName}
+                  </Box>
+                </MenuButton>
+                <MenuList bg='#0d2139'>
+                  <Link to='/'>
+                    <MenuItem bg='#0d2139' onClick={() => setChainStatus(0)}>
+                    <Image
+                      boxSize='2rem'
+                      borderRadius='full'
+                      src={algo}
+                      alt='Algorand Chain'
+                      mr='12px'
+                    />
+                    <span>ALGORAND CHAIN</span>
+                    </MenuItem>
+                  </Link>
+                  <MenuDivider />
+                  <Link to='/solana'>
+                    <MenuItem bg='#0d2139' onClick={() => setChainStatus(1)}>
+                      <Image
+                        boxSize='2rem'
+                        borderRadius='full'
+                        src={sol}
+                        alt='Solana Chain'
+                        mr='12px'
+                      />
+                        <span>SOLANA CHAIN</span>
+                    </MenuItem>
+                  </Link>
+                  <MenuDivider />
+                  <Link to='/ethereum'>
+                    <MenuItem bg='#0d2139' onClick={() => setChainStatus(2)}>
+                      <Image
+                        boxSize='2rem'
+                        borderRadius='full'
+                        src={eth}
+                        alt='Ethereum Chain'
+                        mr='12px'
+                      />
+                        <span>ETHEREUM CHAIN</span>
+                    </MenuItem>
+                  </Link>
+                </MenuList>
+              </Menu>
+            </nav>
+          </div>
           <div className="flex items-center justify-between w-full gap-2">
             <Stack spacing={4} direction='row' align='center' justify='center'>
               {!activeAccount ? (

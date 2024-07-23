@@ -1,4 +1,9 @@
 import { useState } from 'react'
+import { 
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from 'react-router-dom'
 import { WalletProvider, useInitializeProviders, PROVIDER_ID } from '@txnlab/use-wallet'
 import { DeflyWalletConnect } from '@blockshake/defly-connect'
 import { PeraWalletConnect } from '@perawallet/connect'
@@ -9,8 +14,10 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 import Header from './components/Header'
-import Hero from './components/Hero'
+import { Hero, SolanaHero, EthereumHero } from './components/Hero'
 import TokenInfos from './components/TokenInfos'
+import SolanaTokenInfos from './components/SolanaTokenInfos'
+import EthereumTokenInfos from './components/EthereumTokenInfos'
 import Footer from './components/Footer'
 
 function App() {
@@ -23,40 +30,23 @@ function App() {
     ]
   })
 
-  return (
-    <>
-      <WalletProvider value={providers}>
+  return (    
+    <WalletProvider value={providers}>
+      <Router>
         <div className='flex flex-col'>
           <Header />
           <main>
-            <Hero />
-            <TokenInfos />
+            
+            <Routes>
+              <Route exact path='/' element={<><Hero /><TokenInfos /></>} />
+              <Route path='/solana' element={<><SolanaHero /><SolanaTokenInfos /></>} />
+              <Route path='/ethereum' element={<><EthereumHero /><EthereumTokenInfos /></>} />
+            </Routes>
           </main>
           <Footer />
         </div>
-        
-        {/* <div>
-          <a href="https://vitejs.dev" target="_blank">
-            <img src={viteLogo} className="logo" alt="Vite logo" />
-          </a>
-          <a href="https://react.dev" target="_blank">
-            <img src={reactLogo} className="logo react" alt="React logo" />
-          </a>
-        </div>
-        <h1>Vite + React</h1>
-        <div className="card">
-          <button onClick={() => setCount((count) => count + 1)}>
-            count is {count}
-          </button>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test HMR
-          </p>
-        </div>
-        <p className="read-the-docs">
-          Click on the Vite and React logos to learn more
-        </p> */}
-      </WalletProvider>
-    </>
+      </Router>
+    </WalletProvider>
   )
 }
 
