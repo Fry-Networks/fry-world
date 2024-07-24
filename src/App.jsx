@@ -1,6 +1,5 @@
-import { useState } from 'react'
-import { 
-  BrowserRouter as Router,
+import { useEffect } from 'react'
+import {
   Routes,
   Route,
 } from 'react-router-dom'
@@ -21,7 +20,7 @@ import EthereumTokenInfos from './components/EthereumTokenInfos'
 import Footer from './components/Footer'
 
 function App() {
-  const [count, setCount] = useState(0)
+
   const providers = useInitializeProviders({
     providers: [
       { id: PROVIDER_ID.DEFLY, clientStatic: DeflyWalletConnect },
@@ -32,20 +31,17 @@ function App() {
 
   return (    
     <WalletProvider value={providers}>
-      <Router>
-        <div className='flex flex-col'>
-          <Header />
-          <main>
-            
-            <Routes>
-              <Route exact path='/' element={<><Hero /><TokenInfos /></>} />
-              <Route path='/solana' element={<><SolanaHero /><SolanaTokenInfos /></>} />
-              <Route path='/ethereum' element={<><EthereumHero /><EthereumTokenInfos /></>} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </Router>
+      <div className='flex flex-col'>
+        <Header />
+        <main>
+          <Routes>
+            <Route exact path='/' element={<><Hero /><TokenInfos /></>} />
+            <Route path='/solana' element={<><SolanaHero /><SolanaTokenInfos /></>} />
+            <Route path='/ethereum' element={<><EthereumHero /><EthereumTokenInfos /></>} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
     </WalletProvider>
   )
 }

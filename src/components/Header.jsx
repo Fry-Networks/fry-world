@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useWallet } from '@txnlab/use-wallet'
 import { Box, Image, Stack, HStack, Button, ModalHeader, useDisclosure, Modal, ModalBody, 
   ModalContent, ModalCloseButton, ModalFooter, ModalOverlay, Text, IconButton,
@@ -22,6 +22,7 @@ const Header = () => {
     />
   )
 
+  const navigate = useNavigate();
   const { providers, activeAccount, getAssets, getAccountInfo } = useWallet()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [overlay, setOverlay] = useState(<Overlay />)
@@ -75,6 +76,10 @@ const Header = () => {
       setAddress('')
     }
   }, [activeAccount])
+
+  useEffect(() => {
+    navigate('/');
+  }, []);
 
   return(
     <div className="flex justify-between w-full h-max px-16 border-b border-white/10 max-sm:px-0">
