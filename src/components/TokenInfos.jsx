@@ -323,7 +323,8 @@ const TokenInfos = () => {
           </FormControl>
         </div>
       </div>
-      <Stack spacing={4} direction='row' align='center' justify='center' py='3rem'>
+      <Stack spacing={4} direction='column' align='center' justify='center' py='3rem'>
+        <Text fontSize="sm">(Cost: $20 USD in $FRY)</Text>
         <Button backgroundColor='#00C1F0' size='md' disabled={pending} onClick={() => sendTransaction()}>Create Token</Button>
       </Stack>
       <Divider />
