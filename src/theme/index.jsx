@@ -22,6 +22,9 @@ const theme = extendTheme({
     initialColorMode: "dark",
     useSystemColorMode: false,
   },
+  colors: {
+    primary: '#ff0000',
+  },
   fonts: {
     heading: `'Intro Black', sans-serif`,
     body: `'Intro Regular', sans-serif`,
@@ -29,7 +32,8 @@ const theme = extendTheme({
   styles: {
     global: {
       body: {
-        bg: '#030B15',
+        // bg: '#030B15',
+        bg: '#111111',
       },
       p: {
         m: 0,

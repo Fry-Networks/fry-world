@@ -31,7 +31,7 @@ function App() {
 
   return (    
     <WalletProvider value={providers}>
-      <div className='flex flex-col'>
+      <div className='flex flex-col w-full'>
         <Header />
         <main>
           <Routes>

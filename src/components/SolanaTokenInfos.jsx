@@ -625,15 +625,15 @@ const SolanaTokenInfos = () => {
             fontWeight: 600,
             background: "#030B15",
             borderRadius: "6px",
-            border: "1px solid #00C1F0",
+            border: "1px solid #ff0000",
             height: "2.5rem",
-            color: "#00C1F0",
+            color: "#ff0000",
           }}
         />
       </div>
       <div className="flex justify-between">
         <div className="flex flex-col justify-center items-start space-y-2">
-          <Heading as="h5" size="sm" textColor="#00C1F0">
+          <Heading as="h5" size="sm" textColor="primary">
             Token Details
           </Heading>
           <Text color="gray">Enter token details and choose a network</Text>
@@ -644,9 +644,9 @@ const SolanaTokenInfos = () => {
               fontWeight: 600,
               background: "#030B15",
               borderRadius: "6px",
-              border: "1px solid #00C1F0",
+              border: "1px solid #ff0000",
               height: "2.5rem",
-              color: "#00C1F0",
+              color: "#ff0000",
             }}
           />
         </div>
@@ -660,7 +660,7 @@ const SolanaTokenInfos = () => {
             </HStack>
             <Input
               type="text"
-              backgroundColor="#0B1D33"
+              border='1px solid #ff0000' color='black' backgroundColor='white'
               placeholder="Enter your token name"
               value={tokenName}
               onChange={handleTokenName}
@@ -673,7 +673,7 @@ const SolanaTokenInfos = () => {
             </HStack>
             <Input
               type="text"
-              backgroundColor="#0B1D33"
+              border='1px solid #ff0000' color='black' backgroundColor='white'
               placeholder="Enter your token symbol"
               value={symbol}
               onChange={handleSymbol}
@@ -689,7 +689,7 @@ const SolanaTokenInfos = () => {
             <Input
               type="text"
               disabled
-              backgroundColor="#0B1D33"
+              border='1px solid #ff0000' color='black' backgroundColor='white'
               placeholder="Enter your token decimals"
               value={tokenDecimal}
               onChange={handleTokenDecimal}
@@ -702,7 +702,7 @@ const SolanaTokenInfos = () => {
             </HStack>
             <Input
               type="number"
-              backgroundColor="#0B1D33"
+              border='1px solid #ff0000' color='black' backgroundColor='white'
               placeholder="Enter your token total supply"
               value={totalSupply}
               onChange={handleTotalSupply}
@@ -717,7 +717,7 @@ const SolanaTokenInfos = () => {
             </HStack>
             <Input
               type="text"
-              backgroundColor="#0B1D33"
+              border='1px solid #ff0000' color='black' backgroundColor='white'
               placeholder="Enter your token website URL"
               value={websiteUrl}
               onChange={handleWebsiteUrl}
@@ -730,7 +730,7 @@ const SolanaTokenInfos = () => {
             </HStack>
             <Input
               type="text"
-              backgroundColor="#0B1D33"
+              border='1px solid #ff0000' color='black' backgroundColor='white'
               placeholder="Enter your token Twitter URL"
               value={twitterUrl}
               onChange={handleTwitterUrl}
@@ -745,7 +745,7 @@ const SolanaTokenInfos = () => {
             </HStack>
             <Input
               type="text"
-              backgroundColor="#0B1D33"
+              border='1px solid #ff0000' color='black' backgroundColor='white'
               placeholder="Enter your token telegram group URL"
               value={telegramUrl}
               onChange={handleTelegramUrl}
@@ -758,7 +758,7 @@ const SolanaTokenInfos = () => {
             </HStack>
             <Input
               type="text"
-              backgroundColor="#0B1D33"
+              border='1px solid #ff0000' color='black' backgroundColor='white'
               placeholder="Enter your token discord URL"
               value={discordUrl}
               onChange={handleDiscordUrl}
@@ -773,7 +773,7 @@ const SolanaTokenInfos = () => {
             </HStack>
             <Textarea
               type="text"
-              backgroundColor="#0B1D33"
+              border='1px solid #ff0000' color='black' backgroundColor='white'
               placeholder="Enter your token description"
               value={description}
               onChange={handleDescription}
@@ -804,22 +804,24 @@ const SolanaTokenInfos = () => {
           </FormControl>
         </div>
         <div className="flex flex-col justify-center items-center w-full gap-2">
-          <div className="flex items-start w-4/5">
+          <div className="flex items-start w-4/5 max-sm:w-full">
             <Text color="gray">Symbol Image (ex. Square size 128x128 or larger is recommended.)</Text>
           </div>
-          <div className="flex flex-col justify-center w-4/5 gap-6 py-6 border-2 border-dotted rounded-lg">
-            <div className="flex justify-center items-center gap-3">
+          <div className="flex flex-col justify-center w-4/5 max-sm:w-full gap-6 py-6 border-2 border-dotted rounded-lg max-sm:px-4">
+            <div className="flex justify-center items-center gap-3 flex-col">
               {loader ? (
                 <Loader />
               ) : (
                 <>
-                  <h5 className="text-[1.3rem]">Upload Token Image: </h5>
-                  <button
-                    className="flex justify-center px-6 py-6 bg-[#0B1D33]"
-                    onClick={onUpload}
-                  >
-                    <ArrowUpTrayIcon className="h-9 w-9" />
-                  </button>
+                  <div className="flex max-sm:flex-col gap-4 items-center">
+                    <h5 className="text-[1.3rem] max-sm:text-sm">Upload Token Image: </h5>
+                    <button
+                      className="flex justify-center px-6 py-6 border-white"
+                      onClick={onUpload}
+                    >
+                      <ArrowUpTrayIcon className="h-9 w-9" />
+                    </button>
+                  </div>
                   <input
                     type="file"
                     className="file-input file-input-bordered w-full max-w-xs hidden"
@@ -834,13 +836,13 @@ const SolanaTokenInfos = () => {
                     <span class="loading loading-ring loading-lg"></span>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center border-dashed rounded-md border-[1px] border-gray-400 pt-2 px-8">
+                  <div className="flex flex-col w-full sm:w-1/2 items-center border-dashed rounded-md border-[1px] border-gray-400 pt-2 px-8">
                     <img
                       src={userAvatarUrl}
                       alt="preview"
                       className="w-16 h-16 object-cover rounded-lg"
                     />
-                    <h6 className="text-[0.9rem]">{uploadFile}</h6>
+                    <h6 className="text-[0.9rem]">{uploadFile.substring(0, 6) + '...' + uploadFile.slice(-10)}</h6>
                   </div>
                 )
               ) : (
@@ -870,10 +872,15 @@ const SolanaTokenInfos = () => {
       >
         <Text fontSize="sm">(Cost: $20 USD in $FRY)</Text>
         <Button
-          backgroundColor="#00C1F0"
+          backgroundColor="#ff0000"
           size="md"
           disabled={pending}
           onClick={() => handleCreateToken()}
+          _hover={{
+            borderColor: '#ff0000',
+            bg: 'transparent',
+            color: '#ff0000'
+          }}
         >
           Create Token
         </Button>

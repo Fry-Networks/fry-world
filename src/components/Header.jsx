@@ -30,11 +30,41 @@ const Header = () => {
   const [algoBalance, setAlgoBalance] = useState('0.00')
   const [fryBalance, setFryBalance] = useState('0.00')
   const [chainStatus, setChainStatus] = useState(0)
+  const [activeLink, setActiveLink] = useState('Algorand');
   const chainList = [
     { chainId: 0, chainName: 'ALGORAND', chainIcon: `${algo}` },
     { chainId: 1, chainName: 'SOLANA', chainIcon: `${sol}` },
     { chainId: 2, chainName: 'ETHEREUM', chainIcon: `${eth}`},
   ]
+  const Links = ['Algorand', 'Solana', 'Ethereum']
+
+  const handleLinkClick = (link) => {
+    setActiveLink(link);
+  };
+
+  const NavLink = ({ children, isActive, onClick}) => {
+      
+    return (
+      <Link 
+        to={`/${children == 'Algorand' ? '' : children}`}
+        onClick={onClick}
+      >
+        <Box
+          px={2}
+          py={1}
+          rounded={'md'}
+          color={isActive ? 'primary' : 'white'}
+          _hover={{
+            textDecoration: 'none',
+            bg: 'primary',
+            color: 'white'
+          }}
+        >
+          {children}
+        </Box>
+      </Link>
+    )
+  }
 
   const handleDisconnect = () => {
     if (activeAccount) {
@@ -91,11 +121,25 @@ const Header = () => {
       <div className="font-sans flex justify-between items-center lg:px-7 px-4 z-[50] gap-6">
           <div className="flex">
             <nav>
+              <HStack spacing={8} alignItems={'center'}>
+                <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
+                  {Links.map((link) => (
+                    <NavLink 
+                      key={link} 
+                      isActive={activeLink === link}
+                      onClick={() => handleLinkClick(link)}
+                    >
+                      {link}
+                    </NavLink>
+                  ))}
+                </HStack>
+              </HStack>
               <Menu>
                 <MenuButton
                   as={Button}
-                  color='#00C1F0'
-                  borderColor='#00C1F0'
+                  display={{ base: 'flex', md: 'none' }}
+                  color='white'
+                  borderColor='primary'
                   pr={{ base: '0.5rem', sm: '2.4rem' }}
                   variant='outline'
                   leftIcon ={
@@ -107,7 +151,7 @@ const Header = () => {
                     />
                   }
                 >
-                  <Box display={{ base: 'none', sm: 'flex' }}>
+                  <Box display={{ base: 'none', md: 'flex' }}>
                     {chainList[chainStatus].chainName}
                   </Box>
                 </MenuButton>
@@ -157,13 +201,13 @@ const Header = () => {
           <div className="flex items-center justify-between w-full gap-2">
             <Stack spacing={4} direction='row' align='center' justify='center'>
               {!activeAccount ? (
-                <Button color='#00C1F0' borderColor='#00C1F0' size='md' variant='outline' onClick={() => {
+                <Button color='primary' _hover={{ bg: 'primary', color: 'white', borderColor: 'primary'}} borderColor='primary' size='md' variant='outline' onClick={() => {
                   setOverlay(<Overlay />)
                   onOpen()
                 }}>Connect Wallet</Button>
               ) : (
                 <>
-                  <Box color='#00C1F0' border='1px solid' borderColor='#00C1F0' borderRadius='0.3rem' size='sm' py='0.2rem' px='0.5rem' gap='0.6rem' alignItems='center' display={{ base: 'none', sm: 'flex' }}>
+                  <Box color='primary' border='1px solid' borderColor='primary' borderRadius='0.3rem' size='sm' py='0.2rem' px='0.5rem' gap='0.6rem' alignItems='center' display={{ base: 'none', sm: 'flex' }}>
                     <Box display='flex' gap='0.6rem' alignItems='center'>
                       <Image borderRadius='full' boxSize='1.2rem' src={algo} alt="algo logo"/>
                       <Text>{algoBalance}</Text>
@@ -174,7 +218,7 @@ const Header = () => {
                       <Text>{fryBalance}</Text>
                     </Box>
                   </Box>
-                  <Button color='#00C1F0' borderColor='#00C1F0' size='md' variant='outline' onClick={() => {
+                  <Button color='primary' borderColor='primary' size='md' variant='outline' onClick={() => {
                     setOverlay(<Overlay />)
                     onOpen()
                   }}>{address}</Button>

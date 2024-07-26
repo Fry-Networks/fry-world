@@ -236,7 +236,7 @@ const TokenInfos = () => {
     <div className='flex flex-col w-full px-72 py-16 gap-10 max-sm:px-12 max-sm:pt-24'>
       <Divider />
       <div className='flex flex-col justify-center items-start space-y-2' >
-        <Heading as='h5' size='sm' textColor='#00C1F0'>Token Details</Heading>
+        <Heading as='h5' size='sm' textColor='primary'>Token Details</Heading>
         <Text color='gray'>Enter token details and choose a network</Text>
       </div>
       <div className='flex flex-col gap-8 max-sm:gap-16'>
@@ -248,14 +248,14 @@ const TokenInfos = () => {
               </FormLabel>
               <TooltipWrapper label="The name of the asset. Max size is 32 bytes. Example: Tether" />
             </HStack>
-            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token asset name' value={assetName} onChange={handleAssetName} />
+            <Input type='text' border='1px solid #ff0000' color='black' backgroundColor='white' placeholder='Enter your token asset name' value={assetName} onChange={handleAssetName} />
           </FormControl>
           <FormControl isRequired>
             <HStack align='center' pb='0.5rem'>
               <FormLabel margin='unset'>Unit Name</FormLabel>
               <TooltipWrapper label="The name of a unit of this asset. Max size is 8 bytes. Example: USDT" />
             </HStack>
-            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token unit name' value={unitName} onChange={handleUnitName} />
+            <Input type='text' border='1px solid #ff0000' color='black' backgroundColor='white' placeholder='Enter your token unit name' value={unitName} onChange={handleUnitName} />
           </FormControl>
         </div>
         <div className='flex gap-16 max-sm:flex-col'>
@@ -264,14 +264,14 @@ const TokenInfos = () => {
               <FormLabel margin='unset'>Manager Address</FormLabel>
               <TooltipWrapper label="The address of the account that can manage the configuration of the asset and destroy it." />
             </HStack>
-            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token manager address' value={managerAddr} onChange={handleManagerAddr} />
+            <Input type='text' border='1px solid #ff0000' color='black' backgroundColor='white' placeholder='Enter your token manager address' value={managerAddr} onChange={handleManagerAddr} />
           </FormControl>
           <FormControl>
             <HStack align='center' pb='0.5rem'>
               <FormLabel margin='unset'>Reserve Address</FormLabel>
               <TooltipWrapper label="The address of the account that holds the reserve (non-minted) units of the asset. This address has no specific authority in the protocol itself." />
             </HStack>
-            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token reserve address' value={reserveAddr} onChange={handleReserveAddr} />
+            <Input type='text' border='1px solid #ff0000' color='black' backgroundColor='white' placeholder='Enter your token reserve address' value={reserveAddr} onChange={handleReserveAddr} />
           </FormControl>
         </div>
         <div className='flex gap-16 max-sm:flex-col'>
@@ -280,14 +280,14 @@ const TokenInfos = () => {
               <FormLabel margin='unset'>Freeze Address</FormLabel>
               <TooltipWrapper label="The address of the account used to freeze holdings of this asset. If empty, freezing is not permitted." />
             </HStack>
-            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token freeze address' value={freezeAddr} onChange={handleFreezeAddr} />
+            <Input type='text' border='1px solid #ff0000' color='black' backgroundColor='white' placeholder='Enter your token freeze address' value={freezeAddr} onChange={handleFreezeAddr} />
           </FormControl>
           <FormControl>
             <HStack align='center' pb='0.5rem'>
               <FormLabel margin='unset'>ClawBack Address</FormLabel>
               <TooltipWrapper label="The address of the account that can clawback holdings of this asset. If empty, clawback is not permitted." />
             </HStack>
-            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token clawback address' value={clawBackAddr} onChange={handleClawBackAddr} />
+            <Input type='text' border='1px solid #ff0000' color='black' backgroundColor='white' placeholder='Enter your token clawback address' value={clawBackAddr} onChange={handleClawBackAddr} />
           </FormControl>
         </div>
         <div className='flex gap-16 max-sm:flex-col'>
@@ -296,14 +296,14 @@ const TokenInfos = () => {
               <FormLabel margin='unset'>Total Supply</FormLabel>
               <TooltipWrapper label="The total number of base units of the asset to create. This number cannot be changed." />
             </HStack>
-            <Input type='number' backgroundColor='#0B1D33' placeholder='Enter your token total supply' value={totalSupply} onChange={handleTotalSupply} />
+            <Input type='number' border='1px solid #ff0000' color='black' backgroundColor='white' placeholder='Enter your token total supply' value={totalSupply} onChange={handleTotalSupply} />
           </FormControl>
           <FormControl isRequired>
             <HStack align='center' pb='0.5rem'>
               <FormLabel margin='unset'>Token Decimal</FormLabel>
               <TooltipWrapper label="The number of digits to use after the decimal point when displaying the asset. If 3, the base unit of the asset is in thousandths, and so on up to 19 decimal places" />
             </HStack>
-            <Input type='number' backgroundColor='#0B1D33' placeholder='Enter your token decimal' value={tokenDecimal} onChange={handleTokenDecimal} />
+            <Input type='number' border='1px solid #ff0000' color='black' backgroundColor='white' placeholder='Enter your token decimal' value={tokenDecimal} onChange={handleTokenDecimal} />
           </FormControl>
         </div>
         <div className='flex gap-16 max-sm:flex-col'>
@@ -312,20 +312,36 @@ const TokenInfos = () => {
               <FormLabel margin='unset'>Asset URL</FormLabel>
               <TooltipWrapper label="Specifies a URL where more information about the asset can be retrieved. Max size is 96 bytes." />
             </HStack>
-            <Input type='text' backgroundColor='#0B1D33' placeholder='Enter your token asset url' value={assetUrl} onChange={handleAssetUrl} />
+            <Input type='text' border='1px solid #ff0000' color='black' backgroundColor='white' placeholder='Enter your token asset url' value={assetUrl} onChange={handleAssetUrl} />
           </FormControl>
           <FormControl>
             <HStack align='center' pb='0.5rem'>
               <FormLabel margin='unset'>Default Frozen</FormLabel>
               <TooltipWrapper label="True to freeze holdings for this asset by default." />
             </HStack>
-            <Switch id='isChecked' size='lg' onChange={handleDefaultFrozen}/>
+            <Switch
+              id='isChecked' 
+              size='lg' 
+              onChange={handleDefaultFrozen}
+            />
           </FormControl>
         </div>
       </div>
       <Stack spacing={4} direction='column' align='center' justify='center' py='3rem'>
         <Text fontSize="sm">(Cost: $20 USD in $FRY)</Text>
-        <Button backgroundColor='#00C1F0' size='md' disabled={pending} onClick={() => sendTransaction()}>Create Token</Button>
+        <Button 
+          backgroundColor='primary' 
+          size='md' 
+          disabled={pending} 
+          _hover={{
+            borderColor: '#ff0000',
+            bg: 'transparent',
+            color: '#ff0000'
+          }}
+          onClick={() => sendTransaction()}
+        >
+          Create Token
+        </Button>
       </Stack>
       <Divider />
     </div>
