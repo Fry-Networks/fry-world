@@ -25,7 +25,7 @@ import {
   DEFAULT_NODE_PORT,
 } from "@txnlab/use-wallet";
 import algosdk from "algosdk";
-import { FRY_ASSETID, FRY_VAULT, ALGO_VAULT, FEE_FAIL, FEE_SUCCESS } from "./Constants";
+import { FRY_ASSETID, FRY_VAULT, ALGO_VAULT, FEE_FAIL, FEE_SUCCESS, SOLANA_RPC } from "./Constants";
 
 import {
   Connection,
@@ -374,7 +374,7 @@ const SolanaTokenInfos = () => {
     revokeFreezeBool
   ) => {
     const connection = new Connection(
-      "https://fluent-side-isle.solana-mainnet.quiknode.pro/19a27fc1fa07c0a0aff254ef753b1ba030360b39/"
+      SOLANA_RPC
     );
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
     const mintKeypair = Keypair.generate();
