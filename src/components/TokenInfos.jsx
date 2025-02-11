@@ -14,7 +14,7 @@ import {
  } from '@txnlab/use-wallet'
 import algosdk from 'algosdk'
 
-import { FRY_ASSETID, FRY_VAULT, ALGO_VAULT} from './Constants'
+import { FRY_VAULT, ALGO_VAULT} from './Constants'
 import query from '../assets/query.png'
 import TooltipWrapper from './TooltipWrapper'
 
@@ -39,6 +39,10 @@ const TokenInfos = () => {
   const [tokenDecimal, setTokenDecimal] = useState(0)
   const [assetUrl, setAssetUrl] = useState('')
   const [defaultFrozen, setDefaultFrozen] = useState(false)
+
+  const [fryAssetId, setFryAssetId] = useState('');
+  const [feePrice, setFeePrice] = useState(0);
+
   const toast = useToast()
 
   const handleAssetName = (e) => {
@@ -81,21 +85,63 @@ const TokenInfos = () => {
     setDefaultFrozen(e.target.checked)
   }
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          `https://4c34-198-23-148-18.ngrok-free.app/getPrice`, 
+          JSON.stringify({ project_name: 'Fry World' }),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+  
+        if (!response.data.success) {
+          toast({
+            title: 'Invalid Value',
+            description: `Can't fetch Price data`,
+            status: 'info',
+            duration: 3000,
+            isClosable: true,
+          })
+          return
+        }
+        setFryAssetId(response.data.data.asset_id === '11111111111' ? '0' : response.data.data.asset_id);
+        setFeePrice(response.data.data.price);
+  
+        console.log('API getPrice : ', response);
+        
+      } catch (error) {
+        console.error(`Error fetching price for ${fryAssetId}:`, error);
+        return
+      }
+    }
+
+    fetchData();
+  }, [activeAddress])
+
   const getFRYPrice = async () => {
     try {
-      const response = await axios.get(`https://free-api.vestige.fi/asset/${FRY_ASSETID}/price`);
+      let response;
+      if (fryAssetId === '0') {
+        response = await axios.get('https://free-api.vestige.fi/currency/prices');
+      } else {
+        response = await axios.get(`https://free-api.vestige.fi/asset/${fryAssetId}/price`);
+      }
 
       // Filter out words with spaces or dashes
       return parseFloat(response.data.USD).toFixed(5)
     } catch (error) {
-      console.error(`Error fetching price for ${FRY_ASSETID}:`, error);
+      console.error(`Error fetching price for ${fryAssetId}:`, error);
       return [];
     }
   }
 
   const getFRYAmount = async () => {
     const USDPrice = await getFRYPrice()
-    const amount = parseInt(20 / USDPrice)
+    const amount = parseInt(feePrice / USDPrice)
     return amount
   }
 
@@ -125,6 +171,17 @@ const TokenInfos = () => {
       return
     }
 
+    if (feePrice === 0) {
+      toast({
+        title: 'Invalid Value',
+        description: 'The payment for Fee is disabled.',
+        status: 'info',
+        duration: 3000,
+        isClosable: true,
+      })
+      return
+    }
+
     setPending(true)
 
     const assetInfos = await getAssets()
@@ -132,7 +189,7 @@ const TokenInfos = () => {
     const fryAmount = await getFRYAmount()
 
     const filteredInfos = assetInfos.filter((info) => {
-      return info['asset-id'] == FRY_ASSETID && parseInt(info.amount / 10**6) < fryAmount;
+      return info['asset-id'] == fryAssetId && parseInt(info.amount / 10**6) < fryAmount;
     });
 
     if (filteredInfos.length) {
@@ -166,7 +223,7 @@ const TokenInfos = () => {
       to: FRY_VAULT.toString(),
       amount: BigInt(fryAmount * 10**6),
       note: new Uint8Array(Buffer.from('fry.world payment')),
-      assetIndex: FRY_ASSETID,
+      assetIndex: fryAssetId,
       suggestedParams: params,
     });
 
@@ -218,9 +275,49 @@ const TokenInfos = () => {
         duration: 3000,
         isClosable: true,
       })
+      
+      console.log("Successfully sent transaction. Transaction ID: ", id);
+
+      try {
+        const response = await axios.post(
+          'https://4c34-198-23-148-18.ngrok-free.app/setTokenLogs',
+          JSON.stringify({ address: activeAddress, asset_id: fryAssetId, price: feePrice, txId: id, createdAt: new Date() }),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+  
+        console.log(response.status);
+        if (response.status) {
+          toast({
+            title: 'Creating Token Event',
+            description: 'Saved created token history.',
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          })  
+        } else {
+          toast({
+            title: 'Creating Token Event',
+            description: 'Failed to Save created token history.',
+            status: 'info',
+            duration: 3000,
+            isClosable: true,
+          })
+        }
+      } catch (e) {
+        toast({
+          title: 'Failed To Request API Call!',
+          description: e.message,
+          status: 'info',
+          duration: 3000,
+          isClosable: true,
+        })
+      }
     }
     setPending(false)
-    console.log("Successfully sent transaction. Transaction ID: ", id);
   };
 
   // const createToken = () => {
@@ -328,7 +425,7 @@ const TokenInfos = () => {
         </div>
       </div>
       <Stack spacing={4} direction='column' align='center' justify='center' py='3rem'>
-        <Text fontSize="sm">(Cost: $20 USD in $FRY)</Text>
+        <Text fontSize="sm">(Cost: ${feePrice} USD in $FRY)</Text>
         <Button 
           backgroundColor='primary' 
           size='md' 

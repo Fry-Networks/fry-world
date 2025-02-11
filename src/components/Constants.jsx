@@ -1,6 +1,7 @@
 export const FRY_ASSETID = 924268058;
 export const FEE_SUCCESS = 1;
 export const FEE_FAIL = 0;
+export const FEE_PRICE = 3;
 export const FRY_VAULT = 'ATPVJYGEGP5H6GCZ4T6CG4PK7LH5OMWXHLXZHDPGO7RO6T3EHWTF6UUY6E'
 export const ALGO_VAULT = 'ATPVJYGEGP5H6GCZ4T6CG4PK7LH5OMWXHLXZHDPGO7RO6T3EHWTF6UUY6E'
 export const SOLANA_RPC = 'https://solana-mainnet.g.alchemy.com/v2/WaNiLI6jzjz5jnfX_qmRQTnseAaXO7j_'
