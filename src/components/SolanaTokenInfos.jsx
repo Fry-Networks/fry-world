@@ -25,7 +25,7 @@ import {
   DEFAULT_NODE_PORT,
 } from "@txnlab/use-wallet";
 import algosdk from "algosdk";
-import { FRY_ASSETID, FRY_VAULT, ALGO_VAULT, FEE_FAIL, FEE_SUCCESS, SOLANA_RPC } from "./Constants";
+import { FRY_ASSETID, FRY_VAULT, ALGO_VAULT, FEE_FAIL, FEE_SUCCESS, SOLANA_RPC, FEE_PRICE } from "./Constants";
 
 import {
   Connection,
@@ -163,7 +163,7 @@ const SolanaTokenInfos = () => {
 
   const getFRYAmount = async () => {
     const USDPrice = await getFRYPrice();
-    const amount = parseInt(20 / USDPrice);
+    const amount = parseInt(FEE_PRICE / USDPrice);
     return amount;
   };
 
@@ -870,7 +870,7 @@ const SolanaTokenInfos = () => {
         justify="center"
         py="3rem"
       >
-        <Text fontSize="sm">(Cost: $20 USD in $FRY)</Text>
+        <Text fontSize="sm">(Cost: $3 USD in $FRY)</Text>
         <Button
           backgroundColor="#ff0000"
           size="md"
