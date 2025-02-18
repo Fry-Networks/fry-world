@@ -88,8 +88,9 @@ const TokenInfos = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // `https://4c34-198-23-148-18.ngrok-free.app/getPrice`,
         const response = await axios.post(
-          `https://4c34-198-23-148-18.ngrok-free.app/getPrice`, 
+          `https://depin.frynetworks.com/getPrice`,
           JSON.stringify({ project_name: 'Fry World' }),
           {
             headers: {
@@ -279,8 +280,9 @@ const TokenInfos = () => {
       console.log("Successfully sent transaction. Transaction ID: ", id);
 
       try {
+        // 'https://4c34-198-23-148-18.ngrok-free.app/setTokenLogs',
         const response = await axios.post(
-          'https://4c34-198-23-148-18.ngrok-free.app/setTokenLogs',
+          'https://depin.frynetworks.com/setTokenLogs',
           JSON.stringify({ address: activeAddress, asset_id: fryAssetId, price: feePrice, txId: id, createdAt: new Date() }),
           {
             headers: {
