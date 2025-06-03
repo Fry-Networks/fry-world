@@ -125,15 +125,10 @@ const TokenInfos = () => {
 
   const getFRYPrice = async () => {
     try {
-      let response;
-      if (fryAssetId === '0') {
-        response = await axios.get('https://free-api.vestige.fi/currency/prices');
-      } else {
-        response = await axios.get(`https://free-api.vestige.fi/asset/${fryAssetId}/price`);
-      }
-
-      // Filter out words with spaces or dashes
-      return parseFloat(response.data.USD).toFixed(5)
+      const fryURL = `https://api.vestigelabs.org/assets/price?asset_ids=${fryAssetId}`;
+      const response = await axios.get(fryURL);
+      const price = parseFloat(response.data[0].price) * 2 / 10;
+      return price.toFixed(6);
     } catch (error) {
       console.error(`Error fetching price for ${fryAssetId}:`, error);
       return [];

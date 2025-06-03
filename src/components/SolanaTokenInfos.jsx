@@ -149,12 +149,10 @@ const SolanaTokenInfos = () => {
 
   const getFRYPrice = async () => {
     try {
-      const response = await axios.get(
-        `https://free-api.vestige.fi/asset/${FRY_ASSETID}/price`
-      );
-
-      // Filter out words with spaces or dashes
-      return parseFloat(response.data.USD).toFixed(5);
+      const fryURL = `https://api.vestigelabs.org/assets/price?asset_ids=${FRY_ASSETID}`;
+      const response = await axios.get(fryURL);
+      const price = parseFloat(response.data[0].price) * 2 / 10;
+      return price.toFixed(6);
     } catch (error) {
       console.error(`Error fetching price for ${FRY_ASSETID}:`, error);
       return [];
